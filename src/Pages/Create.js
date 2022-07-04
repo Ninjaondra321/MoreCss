@@ -10,7 +10,8 @@ import "../Styles/app.css"
 
 
 
-import text from "../Styles/uikit-default.txt"
+import uiKitCSS from "../Styles/uikit-default.txt"
+import bootstrapCSS from "../Styles/bootstrap.txt"
 
 
 
@@ -26,9 +27,32 @@ const Create = () => {
     const [cssKit, setCssKit] = useState();
     const [cssVariables, setCssVariables] = useState();
     const [htmlComponents, setHtmlComponents] = useState();
+    const [scripts, setScripts] = useState();
 
     useEffect(() => {
-        fetch(text).then((response) => response.text()).then((txt) => setCssKit(txt))
+        let projects = JSON.parse(localStorage.getItem('MoreeCss-Projekty'))
+        console.log(projects)
+        for (var testProject of projects) {
+            if (testProject.id == project) {
+
+                // Set css kit and sctipts
+                switch (testProject.framework) {
+                    case "uikit":
+                        fetch(uiKitCSS).then((response) => response.text()).then((txt) => setCssKit(txt));
+                        setScripts('<script src="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/js/uikit.min.js"></script><script src="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/js/uikit-icons.min.js"></script>')
+                        break;
+                    case "bootstrap":
+                        fetch(bootstrapCSS).then((response) => response.text()).then((txt) => setCssKit(txt))
+                        setScripts('<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>')
+                        break;
+                }
+
+
+            }
+        }
+
+        console.log(cssKit)
+
     }, [])
 
 
@@ -78,9 +102,9 @@ const Create = () => {
                       <head>                      
                       <style>`+ cssKit + `</style> 
                       <style>`+ cssVariables + `</style> 
-                      <!-- UIkit JS -->
-                      <script src="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/js/uikit.min.js"></script>
-                      <script src="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/js/uikit-icons.min.js"></script>
+                      ` + scripts +
+
+                        `
                       </head>`+ htmlComponents + `
                     </html>
                     `} style={{ resize: "both", maxWidth: "80vw", maxHeight: "calc(100vh - 125px)" }}>
@@ -11445,7 +11469,7 @@ body {
     color: var(--text-secondary-color);
 }`
 
-var UiKit_html = `<body>
+const UiKit_html = `<body>
 <div class="uk-section ">
     <div class="uk-container uk-container-small uk-position-relative">
 
